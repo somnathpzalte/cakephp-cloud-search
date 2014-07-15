@@ -152,7 +152,10 @@ class CloudSearchSource extends DataSource {
   }
 
   public function listSources($data = null) {
-    if ($client = $this->_factoryClient()) {
+    if (!empty($this->config['domain'])) {
+      // Set useTable later
+      return null;
+    } elseif ($client = $this->_factoryClient()) {
       return array_keys($client->listDomainNames()['DomainNames']);
     }
     return null;
@@ -231,7 +234,7 @@ class CloudSearchSource extends DataSource {
 
   protected function _useTable($Model) {
     if (!empty($this->config['domain'])) {
-      $Model->useTable = $this->config['domain'];
+      $Model->setSource($this->config['domain']);
     }
   }
 }
