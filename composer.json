@@ -1,0 +1,29 @@
+{
+  "name" : "nanapi/cakephp-cloud-search",
+  "type": "cakephp-plugin",
+  "extra": {
+    "installer-name" : "CloudSearch"
+  },
+  "description": "Amazon CloudSearch DataSource Plugin for CakePHP",
+  "keywords": [
+    "cakephp",
+    "aws"
+  ],
+  "homepage": "https://github.com/nanapi/cakephp-cloud-search",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Yuhei Kagaya",
+      "email": "yuhei.kagaya@nanapi.co.jp"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/nanapi/cakephp-cloud-search/issues",
+    "source": "https://github.com/nanapi/cakephp-cloud-search"
+  },
+  "require": {
+    "php": ">=5.3.0",
+    "composer/installers": "*"
+  }
+}
+
