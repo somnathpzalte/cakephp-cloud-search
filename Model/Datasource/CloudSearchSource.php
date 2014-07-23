@@ -28,10 +28,25 @@ class CloudSearchSource extends DataSource {
       return false;
     }
 
+    if (!empty($queryData['limit'])) {
+      $queryData['conditions']['size'] = intval($queryData['limit']);
+    }
+
+    if (!empty($queryData['offset'])) {
+      $queryData['conditions']['start'] = intval($queryData['offset']);
+    }
+
+    if ($Model->findQueryType == 'count') {
+      unset($queryData['fields']['count']);
+    }
+
     $result = $this->_searchClient->search($queryData['conditions']);
 
-
     $found = intval($result->getPath('hits/found'));
+    if ($Model->findQueryType == 'count') {
+      return [[['count' => $found]]];
+    }
+
     if ($found) {
       foreach ($result->getPath('hits/hit') as $hit) {
         $record[$Model->primaryKey] = $hit['id'];

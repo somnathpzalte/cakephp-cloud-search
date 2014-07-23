@@ -94,8 +94,4 @@ class MyController extends AppController {
 ```
 
 ## ToDo
-
-- Pagination
-- find('count')
 - query method (findBy)
-
