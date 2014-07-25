@@ -76,9 +76,30 @@ class MyController extends AppController {
     $result = $this->MyModel>find('all', [
       'conditions' => [
         'query' => 'value1|value2'
-        'return' => '_all_fields,_score',
       ],
+      'fields' => [
+        'id',
+        'name',
+        '_score'
+      ]
     ]);
+
+    // pagination and using facet
+    $options = [
+      'conditions' => [
+        'query' => "(and user_id:3 (or subject:'word1 word2' contents:'word1 word2'))",
+        'sort' => '_score desc',
+        'queryParser' => 'structured',
+      ],
+      'facet' => [
+        'user_name' => ['size' => 10],
+        'category' => ['size' => 20],
+        ],
+      'limit' => 50,
+    ];
+    $this->Paginator->settings = $options;
+    $records = $this->Paginator->paginate('MyModel');
+    $facets = $this->MyModel->getFacets();
 
 
     // delete

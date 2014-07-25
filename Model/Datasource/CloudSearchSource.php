@@ -10,6 +10,7 @@ class CloudSearchSource extends DataSource {
   public $_client = null;
   public $_docClient = null;
   public $_searchClient = null;
+  public $searchResult = null;
 
   public function __construct($config = array()) {
     parent::__construct($config);
@@ -28,6 +29,10 @@ class CloudSearchSource extends DataSource {
       return false;
     }
 
+    if (!empty($queryData['fields'])) {
+      $queryData['conditions']['return'] = implode(',', $queryData['fields']);
+    }
+
     if (!empty($queryData['limit'])) {
       $queryData['conditions']['size'] = intval($queryData['limit']);
     }
@@ -36,19 +41,23 @@ class CloudSearchSource extends DataSource {
       $queryData['conditions']['start'] = intval($queryData['offset']);
     }
 
+    if (!empty($queryData['facet']) && is_array($queryData['facet'])) {
+      $queryData['conditions']['facet'] = json_encode($queryData['facet']);
+    }
+
     if ($Model->findQueryType == 'count') {
       unset($queryData['fields']['count']);
     }
 
-    $result = $this->_searchClient->search($queryData['conditions']);
+    $this->searchResult = $this->_searchClient->search($queryData['conditions']);
 
-    $found = intval($result->getPath('hits/found'));
+    $found = intval($this->searchResult->getPath('hits/found'));
     if ($Model->findQueryType == 'count') {
       return [[['count' => $found]]];
     }
 
     if ($found) {
-      foreach ($result->getPath('hits/hit') as $hit) {
+      foreach ($this->searchResult->getPath('hits/hit') as $hit) {
         $record[$Model->primaryKey] = $hit['id'];
         if (!empty($hit['fields'])) {
           foreach($hit['fields'] as $key => $value) {
