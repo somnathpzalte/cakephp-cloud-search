@@ -58,6 +58,7 @@ class CloudSearchSource extends DataSource {
 
     if ($found) {
       foreach ($this->searchResult->getPath('hits/hit') as $hit) {
+        $record = [];
         $record[$Model->primaryKey] = $hit['id'];
         if (!empty($hit['fields'])) {
           foreach($hit['fields'] as $key => $value) {
