@@ -87,6 +87,10 @@ class CloudSearchSource extends DataSource {
 
     $fields[] = 'type';
     $values[] = 'add';
+
+    // strip ascii code
+    array_walk_recursive($values, function(&$v) { $v = preg_replace('/[\x00-\x09\x0b\x0c\x0e-\x1f\x7f]/', '', $v); }, $values);
+
     $documents = [];
     $documents[] = array_combine($fields, $values);
     try {
